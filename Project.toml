@@ -1,0 +1,4 @@
+name = "ElegantPMFRG"
+uuid = "2bc474b4-e90c-45fb-8691-af64d47c1185"
+authors = ["Michele Mesiti <michele.mesiti@kit.edu>"]
+version = "0.1.0"
