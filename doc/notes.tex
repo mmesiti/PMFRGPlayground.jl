@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=cyan,
+  pdftitle={Overleaf Example},
+  pdfpagemode=FullScreen,
+}
+
+\urlstyle{same}
+
+\title{PMFRG for dummies: Useful formulas for the implementation of the PMFRG code}
+\author{michele.mesiti }
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{What's this?}
+
+In this document all the necessary equations
+for the implementation of the PMFRG method
+are written in the most explicit way possible.
+
+These notes are work in progress,
+probably will never be really finished.
+
+A more modern approach would suggest to write this up
+as part of the documentation of the code,
+to be managed with Documenter.jl,
+but at the moment LaTeX might still fit better.
+This is not set in stone.
+Maybe it would be better to use typst?
+
+At the moment this document can be rendered with latex
+with the shell command
+
+\begin{lstlisting}
+$ pdflatex notex.tex
+\end{lstlisting}
+
+or
+
+\begin{lstlisting}
+$ make
+\end{lstlisting}
+
+
+
+\section{Preliminary notes}
+
+\subsection{Notation: Multiindices}
+\label{multiindex}
+
+In various context different kinds of multiindices are used.
+In the general review [\ref{PFFRGReview}], just after Eq. (16)
+multiindices are introduced as $x = (i,i\omega,\mu)$,
+where:
+
+\begin{itemize}
+\item $i$ is the lattice site index
+\item $\omega$ is the Matsubara frequency
+\item $\mu$ is the ``spin index'' (in the PFFRG case), which
+  generalizes to the ``flavour index''.
+\end{itemize}
+
+In what follows, thought, we want to be rigorous,
+and rigor is best communicate by being explicit,
+so we will use the meaning of the multiindices
+described above
+to translate equations to the dumbest, most explicit form.
+
+\subsection{Propagator}
+
+TODO: fix this. Where does it come from? Where are site and flavour indices?
+\begin{equation}
+  G^\Lambda (\omega) = \frac{1}{i\omega - \Sigma^\Lambda(\omega)}
+\end{equation}
+
+
+\section{Flow Equations}
+TODO: this mimics Eq.4 from Noah's notes, and Eq. 72 from Siebe's,
+     but
+\begin{equation}
+  \frac{d}{d\Lambda} \Gamma^{ij}_{f_1,f_2,f_3,_f4}(\omega_1,\omega_2,\omega_3,\omega_4) =
+\end{equation}
+
+
+\section{Bibliography}
+
+
+\begin{enumerate}
+\item General PFFRG review: \href{https://arxiv.org/pdf/2307.10359}{https://arxiv.org/pdf/2307.10359} \label{PFFRGReview}
+\end{enumerate}
+\end{document}
