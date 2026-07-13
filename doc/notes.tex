@@ -21,7 +21,7 @@
 
 \maketitle
 
-\section{What's this?}
+\section{What's this ``document''?}
 
 In this document all the necessary equations
 for the implementation of the PMFRG method
@@ -36,6 +36,7 @@ to be managed with Documenter.jl,
 but at the moment LaTeX might still fit better.
 This is not set in stone.
 Maybe it would be better to use typst?
+In any case hopefully Pandoc will prove once again its worth.
 
 At the moment this document can be rendered with latex
 with the shell command
@@ -75,13 +76,96 @@ so we will use the meaning of the multiindices
 described above
 to translate equations to the dumbest, most explicit form.
 
-\subsection{Propagator}
+\subsection{Propagators}
 
-TODO: fix this. Where does it come from? Where are site and flavour indices?
+In what follows:
+\begin{itemize}
+\item $a$, $b$ and latin lower-case letters represent Majorana flavours;
+\item $x$ is the site index ($G$ can depend only on one site, because of the local $Z_2$ gauge symmetry - see \ref{PFFRGReview});
+\item $T$ is the temperature, acting in the $T$-flow case as a flow parameter;
+\item $\Lambda$ the cutoff scale (only in $\Lambda$-flow).
+\end{itemize}
+
+Note: In the implementation, $\Sigma$ does not have an explicit dependency on the flow parameter
+(the \textsf{iSigma\_} functions just retrieve values from a data structure with
+minimal manipulation).
+For this reason,
+in for $iG$ we use the flow parameter as a function argument,
+while in the case of $\Sigma$ we merely add it as a superscript.
+
+
+\subsubsection{Matrix algebra for dummies: Derivative of $M^{-1}$}
+Notice that $G$ is represented as the inverse of a matrix.
+The derivative of the inverse of a matrix $M$ can be computed by noticing that
 \begin{equation}
-  G^\Lambda (\omega) = \frac{1}{i\omega - \Sigma^\Lambda(\omega)}
+  \partial_\Lambda\left(M^{-1}M\right) = 0
+\end{equation}
+since $M^{-1}M = M M^{-1} = I$ (assuming $M$ is invertible, of course).
+This means
+\begin{equation}
+  \left(\partial_\Lambda M^{-1}\right)  M + M^{-1}\left(\partial_\Lambda M\right) = 0 .
+\end{equation}
+So
+\begin{equation}
+  \label{derivinv}
+ \frac{\partial M}{\partial \Lambda} = - M \frac{\partial M^{-1}}{\partial \Lambda}  M,
+\end{equation}
+which reduces to the simple case
+\begin{equation}
+ \frac{\partial M}{\partial \Lambda} = - M^2 \frac{\partial M^{-1}}{\partial \Lambda}
+\end{equation}
+if the derivative of $M^{-1}$ commutes with $M$.
+
+
+\subsubsection{$T$ flow}
+The propagator depends on $\Sigma$:
+\begin{equation}
+  \label{g-tflow-general}
+  i{(G(\omega,T,x))}^{-1}_{ab} = \left(\sqrt{T} \omega\right) \delta_{ab} +  i\Sigma^T_{ab}(x,\omega)
 \end{equation}
 
+
+In the isotropic (Heisenberg) or diagonal (``XYZ'') case
+the inverse is trivial, but not in the most general anisotropic case,
+where some matrix inversion function needs to be used.
+
+The expression \ref{g-tflow-general} comes from \href{https://github.com/NoahHassan/pmfrg\_xyz/blob/1824a2bf7811b5276eee6d8d7f40087b5d8a4c15/src/PMFRG_general.jl\#L146-L159}{Noah's general PMFRG}
+code, but there should be a more official source.
+
+From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1599) we get the same expression.
+
+\textbf{TODO}: define $S$ and $S_{kat}$ (should be fairly similar to the $\Lambda$ flow case)
+
+\subsubsection{$\Lambda$ flow}
+
+From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1732) we get:
+\begin{equation}
+  iG{(\omega,T,x,\Lambda)}^{-1}_{a,b} = \frac{\omega^2 \delta_{a,b} + i \omega \Sigma^\Lambda_{ab}(x,\omega) + \Lambda^2}{\omega}
+\end{equation}
+
+The function S (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
+is
+\begin{equation}
+  S = -\left. \frac{\partial G}{\partial \Lambda} \right|_{\Sigma^\Lambda = const} ,
+\end{equation}
+i.e., the derivative of this $G$ with respect to $\Lambda$, keeping $\Sigma$ constant.
+
+
+So in this case
+\begin{equation}
+  S_{ab} = \frac{2\Lambda}{\omega} G_{ac} G_{cb}
+\end{equation}
+Where we left understood the arguments $(\omega,T,x,\Lambda)$ both for functions $S_{ab}$ and $G_{ab}$.
+
+Notice that in the Flow equations $S_{kat}$ is actually used,
+which should improve the quality of the truncation (\emph{Katanin truncation}).
+In this case, we use the full derivative,
+where we also include the derivative $\partial_\Lambda \Sigma^\Lambda$
+
+\begin{equation}
+  S_{kat} = \frac{\partial G}{\partial \Lambda} = G_{ac} \left( \frac{2\Lambda}{\omega}\delta_{cd}  +i \partial_\Lambda \Sigma_{cd}^\Lambda(x,\omega)\right)G_{db},
+\end{equation}
+where for $\partial_\Lambda \Sigma^\Lambda$ we can use the derivative we compute in the flow equations.
 
 \section{Flow Equations}
 TODO: this mimics Eq.4 from Noah's notes, and Eq. 72 from Siebe's,
@@ -137,5 +221,9 @@ instead (still with a plus sign).
 
 \begin{enumerate}
 \item General PFFRG review: \href{https://arxiv.org/pdf/2307.10359}{https://arxiv.org/pdf/2307.10359} \label{PFFRGReview}
+
+\item PMFRG with XYZ anisotropy (code): \href{https://github.com/NoahHassan/pmfrg\_xyz}{https://github.com/NoahHassan/pmfrg\_xyz}
+\item PMFRG xyz $T$-$\Lambda$ flow unified code: \href{https://github.com/mmesiti/pmfrg\_xyz/blob/a2a8d10af3b27aeb67f0d2a1b67816cc5d309d96/src/PMFRG\_xyz.jl} {https://github.com/mmesiti/pmfrg\_xyz/blob/a2a8d10af3b27aeb67f0d2a1b67816cc5d309d96/src/PMFRG\_xyz.jl} \label{PMFRGXYZTLambda}
 \end{enumerate}
+
 \end{document}

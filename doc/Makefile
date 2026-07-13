@@ -1,2 +1,2 @@
 notes.pdf: notes.tex
-	pdflatex $<
+	pdflatex -halt-on-error $<
