@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{amsmath}
 \usepackage{listings}
 \usepackage{hyperref}
 \hypersetup{
@@ -6,7 +7,7 @@
   linkcolor=blue,
   filecolor=magenta,
   urlcolor=cyan,
-  pdftitle={Overleaf Example},
+  pdftitle={PMFRG For Dummies},
   pdfpagemode=FullScreen,
 }
 
@@ -89,6 +90,47 @@ TODO: this mimics Eq.4 from Noah's notes, and Eq. 72 from Siebe's,
   \frac{d}{d\Lambda} \Gamma^{ij}_{f_1,f_2,f_3,_f4}(\omega_1,\omega_2,\omega_3,\omega_4) =
 \end{equation}
 
+
+
+\section{Majorana Algebra}
+From the Majorana sub-package,
+using the \textsf{print\_Hamiltonian\_latex()} function
+in the \textsf{src/Hamiltonian.jl} file,
+and then slightly massaging the output
+in a trivial way:
+\begin{equation}
+  \begin{aligned}
+    H = -\frac{1}{4} \sum_{i,j} \eta^x_i \eta^y_i \eta^x_j \eta^y_j  \\
++2 \eta^x_i \eta^y_i \eta^z_j \theta^z_j \\
++\eta^x_i \eta^z_i \eta^x_j \eta^z_j \\
++\sqrt{3} \eta^x_i \eta^z_i \eta^y_j \theta^x_j \\
++\eta^x_i \eta^z_i \eta^y_j \theta^z_j \\
++3 \eta^x_i \theta^x_i \eta^x_j \theta^x_j  \\
+- \sqrt{3} \eta^x_i \theta^x_i \eta^x_j \theta^z_j \\
++\sqrt{3} \eta^x_i \theta^x_i \eta^y_j \eta^z_j \\
+- \sqrt{3} \eta^x_i \theta^z_i \eta^x_j \theta^x_j \\
++\eta^x_i \theta^z_i \eta^x_j \theta^z_j \\
+-\eta^x_i \theta^z_i \eta^y_j \eta^z_j \\
++\sqrt{3} \eta^y_i \eta^z_i \eta^x_j \theta^x_j  \\
+- \eta^y_i \eta^z_i \eta^x_j \theta^z_j \\
++\eta^y_i \eta^z_i \eta^y_j \eta^z_j \\
++\sqrt{3} \eta^y_i \theta^x_i \eta^x_j \eta^z_j  \\
++3 \eta^y_i \theta^x_i \eta^y_j \theta^x_j \\
++\sqrt{3} \eta^y_i \theta^x_i \eta^y_j \theta^z_j  \\
++\eta^y_i \theta^z_i \eta^x_j \eta^z_j \\
++\sqrt{3} \eta^y_i \theta^z_i \eta^y_j \theta^x_j \\
++\eta^y_i \theta^z_i \eta^y_j \theta^z_j  \\
++2 \eta^z_i \theta^z_i \eta^x_j \eta^y_j \\
++4 \eta^z_i \theta^z_i \eta^z_j \theta^z_j
+  \end{aligned}
+\end{equation}
+
+After visual inspection, all terms match with Eq.(13)
+in Siebe's notes, except the sign (or order)
+of $\eta^y_i \theta^z_i \eta^x_j \eta^z_j$,
+which in Siebe's notes is reported as
+$\eta^y_i \theta^z_i \eta^z_j \eta^x_j$
+instead (still with a plus sign).
 
 \section{Bibliography}
 
