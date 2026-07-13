@@ -1,0 +1,6 @@
+[deps]
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
+Majorana = "89d6b82a-f85e-41b4-ae2f-a54dc17a8e60"
+Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"

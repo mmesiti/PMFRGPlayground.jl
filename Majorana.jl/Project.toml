@@ -1,0 +1,15 @@
+name = "Majorana"
+uuid = "89d6b82a-f85e-41b4-ae2f-a54dc17a8e60"
+version = "0.1.0"
+authors = ["Michele Mesiti <michele.mesiti@kit.edu>"]
+
+[deps]
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+LaTeXStrings = "1.4.0"
+Symbolics = "7.30.0"
