@@ -121,9 +121,8 @@ if the derivative of $M^{-1}$ commutes with $M$.
 The propagator depends on $\Sigma$:
 \begin{equation}
   \label{g-tflow-general}
-  i{(G(\omega,T,x))}^{-1}_{ab} = \left(\sqrt{T} \omega\right) \delta_{ab} +  i\Sigma^T_{ab}(x,\omega)
+  i{(G(\omega,T,x))}^{-1}_{ab} = -\left[\left(\sqrt{T} \omega\right) \delta_{ab} +  i\Sigma^T_{ab}(x,\omega) \right]
 \end{equation}
-
 
 In the isotropic (Heisenberg) or diagonal (``XYZ'') case
 the inverse is trivial, but not in the most general anisotropic case,
@@ -134,44 +133,88 @@ code, but there should be a more official source.
 
 From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1599) we get the same expression.
 
-\textbf{TODO}: define $S$ and $S_{kat}$ (should be fairly similar to the $\Lambda$ flow case)
-
-\subsubsection{$\Lambda$ flow}
-
-From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1732) we get:
-\begin{equation}
-  iG{(\omega,T,x,\Lambda)}^{-1}_{a,b} = \frac{\omega^2 \delta_{a,b} + i \omega \Sigma^\Lambda_{ab}(x,\omega) + \Lambda^2}{\omega}
-\end{equation}
-
-The function S (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
+The function $S$ (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
 is
 \begin{equation}
-  S = -\left. \frac{\partial G}{\partial \Lambda} \right|_{\Sigma^\Lambda = const} ,
+  S = -\left. \frac{\partial G}{\partial T} \right|_{\Sigma^T = const} ,
 \end{equation}
-i.e., the derivative of this $G$ with respect to $\Lambda$, keeping $\Sigma$ constant.
+i.e., the derivative of this $G$ with respect to the flow parameter $T$, keeping $\Sigma$ constant.
 
+In this case, we use $T$ as the flow parameter, so
 
-So in this case
+Regarding $S$, in this case we get (using Eq. (\ref{derivinv})):
 \begin{equation}
-  S_{ab} = \frac{2\Lambda}{\omega} G_{ac} G_{cb}
+  iS_{ab} = -\frac{\omega}{2\sqrt{T}} iG_{ac} iG_{cb}
 \end{equation}
-Where we left understood the arguments $(\omega,T,x,\Lambda)$ both for functions $S_{ab}$ and $G_{ab}$.
+Where we left understood the arguments $(\omega,T,x)$ both for functions $S_{ab}$ and $G_{ab}$.
 
 Notice that in the Flow equations $S_{kat}$ is actually used,
 which should improve the quality of the truncation (\emph{Katanin truncation}).
 In this case, we use the full derivative,
-where we also include the derivative $\partial_\Lambda \Sigma^\Lambda$
+where we also include the derivative $\partial_T \Sigma^T$
 
 \begin{equation}
-  S_{kat} = \frac{\partial G}{\partial \Lambda} = G_{ac} \left( \frac{2\Lambda}{\omega}\delta_{cd}  +i \partial_\Lambda \Sigma_{cd}^\Lambda(x,\omega)\right)G_{db},
+  iS_{kat,ab}(\omega,T,x) = -iG_{ac}(\omega,T,x) \left[\frac{\omega}{2\sqrt{T}}\delta_{cd} + i\partial_T \Sigma^T_{cd}(x,\omega) \right]iG_{db}(\omega,T,x)
+\end{equation}
+
+
+
+\subsubsection{$\Lambda$ flow}
+
+From the $T$-$\Lambda$ flow code [\ref{PMFRGXYZTLambda}] (see line 1732) we get:
+\begin{equation}
+  iG{(\omega,T,x,\Lambda)}^{-1}_{a,b} = -\left[\left(\omega+\frac{\Lambda^2}{\omega}\right) \delta_{ab} + i \Sigma^\Lambda_{ab}(x,\omega)\right]
+\end{equation}
+
+The function $S$ (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
+is
+\begin{equation}
+  S = -\left. \frac{\partial G}{\partial \Lambda} \right|_{\Sigma^\Lambda = const} ,
+\end{equation}
+i.e., the derivative of this $G$ with respect to the flow parameter $\Lambda$, keeping $\Sigma$ constant.
+
+So in this case we get
+\begin{equation}
+i S_{ab} = - \frac{2\Lambda}{\omega} iG_{ac} iG_{cb}
+\end{equation}
+Where we left understood the arguments $(\omega,T,x,\Lambda)$ both for functions $S_{ab}$ and $G_{ab}$.
+
+And for the ``Katanin propagator'':
+\begin{equation}
+  iS_{kat,ab}(\omega,T,x,\Lambda) = - \frac{\partial iG}{\partial \Lambda} = - iG_{ac} (\omega,T,x,\Lambda)\left( \frac{2\Lambda}{\omega}\delta_{cd}  +i \partial_\Lambda \Sigma_{cd}^\Lambda(x,\omega)\right)iG_{db}(\omega,T,x,\Lambda),
 \end{equation}
 where for $\partial_\Lambda \Sigma^\Lambda$ we can use the derivative we compute in the flow equations.
 
 \section{Flow Equations}
-TODO: this mimics Eq.4 from Noah's notes, and Eq. 72 from Siebe's,
-     but
+
+The Flow equations for $\Gamma^{ij}_{abcd}$ are different,
+depending on whether the two sites $i$ and $j$ coincide
+or not.
+
+From Noah's Eqs.(3) and (4) and Siebe's notes, Eqs. (72) and (74)), we have two equations
+When the $i$ and $j$ coincide:
+
 \begin{equation}
-  \frac{d}{d\Lambda} \Gamma^{ij}_{f_1,f_2,f_3,_f4}(\omega_1,\omega_2,\omega_3,\omega_4) =
+  \begin{aligned}
+  \frac{d}{d\Lambda} \Gamma^{ii}_{abcd}(\omega_1,\omega_2,\omega_3,\omega_4) =
+  T \sum_{\omega} \sum_k \left[ -\Gamma^{ik}_{aba'd'}(\omega_1,\omega_2,\omega,-s-\omega)
+\Gamma^{ik}_{b'c'cd}(-\omega,\omega+s,\omega_3,\omega_4)P^{kk}_{a'b'c'd'}(-\omega,-s) \right. \\
+    \left. \right]
+  \end{aligned}
+\end{equation}
+
+
+
+
+
+
+\begin{equation}
+  \frac{d}{d\Lambda} \Gamma^{ij}_{abcd}(\omega_1,\omega_2,\omega_3,\omega_4) = T \sum_{\omega} \sum_k
+\end{equation}
+
+Where
+\begin{equation}
+  P_{abcd}(i,j,\omega,\xi) = -iS_{kat,ab}(\omega,T,i)iG_{cd}(\omega+\xi,T,j)
 \end{equation}
 
 
