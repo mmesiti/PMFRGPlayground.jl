@@ -80,8 +80,10 @@ to translate equations to the dumbest, most explicit form.
 
 In what follows:
 \begin{itemize}
-\item $a$, $b$ and latin lower-case letters represent Majorana flavours;
+\item $a$, $b$ and latin lower-case letters represent Majorana flavours. Expressions with repeated Majorana flavour indices are implicitly summed over.
 \item $x$ is the site index ($G$ can depend only on one site, because of the local $Z_2$ gauge symmetry - see \ref{PFFRGReview});
+\item as a consequence, and a clarification: $G$ inverses ($G^{-1}$) are intended in flavour space;
+\item Summation over site indices are always written out explicitly.
 \item $T$ is the temperature, acting in the $T$-flow case as a flow parameter;
 \item $\Lambda$ the cutoff scale (only in $\Lambda$-flow).
 \end{itemize}
@@ -95,7 +97,8 @@ while in the case of $\Sigma$ we merely add it as a superscript.
 
 
 \subsubsection{Matrix algebra for dummies: Derivative of $M^{-1}$}
-Notice that $G$ is represented as the inverse of a matrix.
+Notice that $G$ is represented as the inverse of a matrix
+(in flavour space).
 The derivative of the inverse of a matrix $M$ can be computed by noticing that
 \begin{equation}
   \partial_\Lambda\left(M^{-1}M\right) = 0
@@ -103,25 +106,26 @@ The derivative of the inverse of a matrix $M$ can be computed by noticing that
 since $M^{-1}M = M M^{-1} = I$ (assuming $M$ is invertible, of course).
 This means
 \begin{equation}
-  \left(\partial_\Lambda M^{-1}\right)  M + M^{-1}\left(\partial_\Lambda M\right) = 0 .
+  \partial_\Lambda \left(M^{-1}\right)  M + M^{-1}\left(\partial_\Lambda M\right) = 0 .
 \end{equation}
 So
 \begin{equation}
   \label{derivinv}
- \frac{\partial M}{\partial \Lambda} = - M \frac{\partial M^{-1}}{\partial \Lambda}  M,
+ \frac{\partial M}{\partial \Lambda} = - M \frac{\partial \left(M^{-1}\right)}{\partial \Lambda}  M,
 \end{equation}
-which reduces to the simple case
+which,
+\emph{if the derivative of $M^{-1}$ commutes with $M$},
+reduces to the simple case
 \begin{equation}
- \frac{\partial M}{\partial \Lambda} = - M^2 \frac{\partial M^{-1}}{\partial \Lambda}
+ \frac{\partial M}{\partial \Lambda} = - M^2 \frac{\partial \left(M^{-1}\right)}{\partial \Lambda}
 \end{equation}
-if the derivative of $M^{-1}$ commutes with $M$.
 
 
 \subsubsection{$T$ flow}
 The propagator depends on $\Sigma$:
 \begin{equation}
   \label{g-tflow-general}
-  i{(G(\omega,T,x))}^{-1}_{ab} = -\left[\left(\sqrt{T} \omega\right) \delta_{ab} +  i\Sigma^T_{ab}(x,\omega) \right]
+  {(iG(\omega,T,x))}^{-1}_{ab} = \left[\left(\sqrt{T} \omega\right) \delta_{ab} +  i\Sigma^T_{ab}(x,\omega) \right]
 \end{equation}
 
 In the isotropic (Heisenberg) or diagonal (``XYZ'') case
@@ -136,7 +140,7 @@ From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1599) we get the s
 The function $S$ (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
 is
 \begin{equation}
-  S = -\left. \frac{\partial G}{\partial T} \right|_{\Sigma^T = const} ,
+  iS = -\left. \frac{\partial iG}{\partial T} \right|_{\Sigma^T = const} ,
 \end{equation}
 i.e., the derivative of this $G$ with respect to the flow parameter $T$, keeping $\Sigma$ constant.
 
@@ -154,67 +158,123 @@ In this case, we use the full derivative,
 where we also include the derivative $\partial_T \Sigma^T$
 
 \begin{equation}
-  iS_{kat,ab}(\omega,T,x) = -iG_{ac}(\omega,T,x) \left[\frac{\omega}{2\sqrt{T}}\delta_{cd} + i\partial_T \Sigma^T_{cd}(x,\omega) \right]iG_{db}(\omega,T,x)
+  iS_{kat,ab}(\omega,T,x) = -iG_{ac}(\omega,T,x) \left[\frac{\omega}{2\sqrt{T}}\delta_{cd} + i\partial_T \Sigma^T_{cd}(x,\omega) \right]iG_{db}(\omega,T,x),
 \end{equation}
 
+where for $\partial_\Lambda \Sigma^\Lambda$ we can use the derivative we compute in the flow equations.
 
+
+
+where we have made explicit the argument dependency
+since $\Sigma$ in the code will be represented as a function
+without a direct dependency on $T$.
 
 \subsubsection{$\Lambda$ flow}
 
 From the $T$-$\Lambda$ flow code [\ref{PMFRGXYZTLambda}] (see line 1732) we get:
 \begin{equation}
-  iG{(\omega,T,x,\Lambda)}^{-1}_{a,b} = -\left[\left(\omega+\frac{\Lambda^2}{\omega}\right) \delta_{ab} + i \Sigma^\Lambda_{ab}(x,\omega)\right]
+  {(iG(\omega,T,x,\Lambda))}^{-1}_{a,b} = \left[\left(\omega+\frac{\Lambda^2}{\omega}\right) \delta_{ab} + i \Sigma^\Lambda_{ab}(x,\omega)\right]
 \end{equation}
 
-The function $S$ (the ``single scale propagator'', see [\ref{PFFRGReview}], Eq. 56 and footnote 11)
-is
+So in this case, for $S$ we get
 \begin{equation}
-  S = -\left. \frac{\partial G}{\partial \Lambda} \right|_{\Sigma^\Lambda = const} ,
+iS_{ab} = - \frac{2\Lambda}{\omega} iG_{ac} iG_{cb}
 \end{equation}
-i.e., the derivative of this $G$ with respect to the flow parameter $\Lambda$, keeping $\Sigma$ constant.
-
-So in this case we get
-\begin{equation}
-i S_{ab} = - \frac{2\Lambda}{\omega} iG_{ac} iG_{cb}
-\end{equation}
-Where we left understood the arguments $(\omega,T,x,\Lambda)$ both for functions $S_{ab}$ and $G_{ab}$.
-
-And for the ``Katanin propagator'':
+Where we left understood the arguments $(\omega,T,x,\Lambda)$ both for functions $S_{ab}$ and $G_{ab}$, while for the ``Katanin propagator'':
 \begin{equation}
   iS_{kat,ab}(\omega,T,x,\Lambda) = - \frac{\partial iG}{\partial \Lambda} = - iG_{ac} (\omega,T,x,\Lambda)\left( \frac{2\Lambda}{\omega}\delta_{cd}  +i \partial_\Lambda \Sigma_{cd}^\Lambda(x,\omega)\right)iG_{db}(\omega,T,x,\Lambda),
 \end{equation}
 where for $\partial_\Lambda \Sigma^\Lambda$ we can use the derivative we compute in the flow equations.
 
+where we have made explicit the argument dependency
+since $\Sigma$ in the code will be represented as a function
+without direct dependencies on $T$ and $\Lambda$.
+
+
 \section{Flow Equations}
+
+In the following, we use:
+\begin{itemize}
+\item superscripts and roman lower-case letters for \emph{site indices}
+  (so far indicated as a explicit argument $x$)
+\item subscripts and roman lower-case letters for \emph{spin flavours},
+  as done so far.
+
+\end{itemize}
+
+\subsection{$F$}
+
+$F$ does not feed into the flow equations but it is nonetheless useful
+to derive other quantities.
+
+
+
+\subsection{$\Sigma$}
+
+TODO: This needs review. [\ref{PFFRGReview}], Eq. 55 for example does not mention
+the $T/2$ factor
+(maybe because it's based on the $\Lambda$ flow?)
+and also contracts the indices in a different way
+than [\ref{PRB103}], Eq. 23b (which matches [\ref{PMFRGFullAniso}], lines 595-604)
+
+
+\begin{equation}
+  \begin{aligned}
+    \frac{d}{d\Lambda} \Sigma^{i}_{ab}(\omega) = -\frac{T}{2} \sum_\psi \sum_{j} S^{j}_{cd}(\psi)\Gamma^{ji}_{cdab}(-\psi,\psi,\omega,-\omega)
+  \end{aligned}
+\end{equation}
+
+\subsection{$\Gamma$}
+
+We define, in the T-flow case
+\begin{equation}
+  P^{ij}_{abcd}(\omega,\psi,T) = -iS_{kat,ab}(\omega,T,i)iG_{cd}(\omega+\psi,T,j)
+\end{equation}
+and in the $\Lambda$-flow case:
+\begin{equation}
+  P^{ij}_{abcd}(\omega,\psi,T,\Lambda) = -iS_{kat,ab}(\omega,T,i,\Lambda)iG_{cd}(\omega+\psi,T,j,\Lambda)
+\end{equation}
+
 
 The Flow equations for $\Gamma^{ij}_{abcd}$ are different,
 depending on whether the two sites $i$ and $j$ coincide
 or not.
 
-From Noah's Eqs.(3) and (4) and Siebe's notes, Eqs. (72) and (74)), we have two equations
+
+From Noah's Eqs.(3) and (4) and Siebe's notes, Eqs. (72) and (74)), we have two equations.
 When the $i$ and $j$ coincide:
 
 \begin{equation}
   \begin{aligned}
-  \frac{d}{d\Lambda} \Gamma^{ii}_{abcd}(\omega_1,\omega_2,\omega_3,\omega_4) =
-  T \sum_{\omega} \sum_k \left[ -\Gamma^{ik}_{aba'd'}(\omega_1,\omega_2,\omega,-s-\omega)
-\Gamma^{ik}_{b'c'cd}(-\omega,\omega+s,\omega_3,\omega_4)P^{kk}_{a'b'c'd'}(-\omega,-s) \right. \\
-    \left. \right]
+  \frac{d}{d\Lambda} \Gamma^{ii}_{abcd}(\omega_a,\omega_b,\omega_c,\omega_d) = \\
+  T \sum_{\omega} \sum_k \left[ -\Gamma^{ik}_{aba'd'}(\omega_a,\omega_b,\omega,-s-\omega)
+\Gamma^{ki}_{b'c'cd}(-\omega,s+\omega,\omega_c,\omega_d)P^{kk}_{a'b'c'd'}(-\omega,-s) \right. \\
++ \Gamma^{ik}_{acb'c'}(\omega_a,\omega_c,-\omega,\omega-t)\Gamma^{ki}_{a'd'bd}(\omega,t-\omega,\omega_b,\omega_d) P^{kk}_{a'b'c'd'}(-\omega,t) \\
+\left. -\Gamma^{ik}_{ada'd'}(\omega_a,\omega_d,\omega,-\omega-u)\Gamma^{ki}_{b'c'bc}(-\omega,u+\omega,\omega_b,\omega_c) P^{kk}_{a'b'c'd'}(-\omega,-u) \right]
   \end{aligned}
 \end{equation}
 
-
-
-
+When the $i$ and $j$ differ:
 
 
 \begin{equation}
-  \frac{d}{d\Lambda} \Gamma^{ij}_{abcd}(\omega_1,\omega_2,\omega_3,\omega_4) = T \sum_{\omega} \sum_k
-\end{equation}
-
-Where
-\begin{equation}
-  P_{abcd}(i,j,\omega,\xi) = -iS_{kat,ab}(\omega,T,i)iG_{cd}(\omega+\xi,T,j)
+  \begin{aligned}
+  \frac{d}{d\Lambda} \Gamma^{ij}_{abcd}(\omega_a,\omega_b,\omega_c,\omega_d) = \\
+  T \sum_\omega \left[ \sum_k -\Gamma^{ik}_{aba'd'}(\omega_a,\omega_b,\omega,-\omega-s)
+    \Gamma^{kj}_{b'c'cd}(-\omega,\omega+s,\omega_c,\omega_d)
+    P^{kk}_{a'b'c'd'}(-\omega,-s) \right. \\
+    + \left( \Gamma^{ij}_{ab'cc'}(\omega_a,-\omega,\omega_c,\omega-t)
+    \Gamma^{ij}_{ba'dd'}(\omega_b,\omega,\omega_d,-\omega+t)
+    P^{ij}_{a'b'c'd'}(-\omega,t) \right. \\
+   \left. + \Gamma^{ij}_{ac'cb'}(\omega_a,\omega-t,\omega_c,-\omega)
+   \Gamma^{ij}_{bd'da'}(\omega_b,-\omega+t,\omega_d,\omega)P^{ji}_{a'b'c'd}(-\omega,t) \right) \\
+   - \left(\Gamma^{ij}_{ad'da'}(\omega_a,-\omega-u,\omega_d,\omega)
+   \Gamma^{ij}_{bc'cb'}(\omega_b,\omega+u,\omega_c,-\omega)
+   P^{ij}_{a'b'c'd}(-\omega,-u) \right. \\
+   + \left.\left. \Gamma^{ij}_{aa'dd'}(\omega_a,\omega,\omega_d,-\omega-u)
+   \Gamma^{ij}_{bb'cc'}(\omega_b,-\omega,\omega_c,\omega+u)
+   P^{ji}_{a'b'c'd'}(-\omega,-u) \right)\right] \\
+  \end{aligned}
 \end{equation}
 
 
@@ -267,6 +327,9 @@ instead (still with a plus sign).
 
 \item PMFRG with XYZ anisotropy (code): \href{https://github.com/NoahHassan/pmfrg\_xyz}{https://github.com/NoahHassan/pmfrg\_xyz}
 \item PMFRG xyz $T$-$\Lambda$ flow unified code: \href{https://github.com/mmesiti/pmfrg\_xyz/blob/a2a8d10af3b27aeb67f0d2a1b67816cc5d309d96/src/PMFRG\_xyz.jl} {https://github.com/mmesiti/pmfrg\_xyz/blob/a2a8d10af3b27aeb67f0d2a1b67816cc5d309d96/src/PMFRG\_xyz.jl} \label{PMFRGXYZTLambda}
+\item PRB paper by Nils, Björn and Johannes: \href{https://journals.aps.org/prb/abstract/10.1103/PhysRevB.103.104431}{https://journals.aps.org/prb/abstract/10.1103/PhysRevB.103.104431} \label{PRB103}
+\item PMFRG, General fully anisotropic case:
+  \href{https://github.com/NoahHassan/pmfrg\_xyz/blob/1824a2bf7811b5276eee6d8d7f40087b5d8a4c15/src/PMFRG\_general.jl}{https://github.com/NoahHassan/pmfrg\_xyz/blob/1824a2bf7811b5276eee6d8d7f40087b5d8a4c15/src/PMFRG\_general.jl} \label{PMFRGFullAniso}
 \end{enumerate}
 
 \end{document}

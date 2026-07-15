@@ -91,11 +91,16 @@ DGamma_(f1::Flavour, f2::Flavour, f3::Flavour, f4::Flavour, # flavours
     geometry, Gamma, P) =
     let s = w1 + w2, # PRB 103, 104431 Eq (22)
         t = w1 + w3,
-        u = w1 + w4
+        u = w1 + w4,
+        (; i, j) = geometry.PairTypes[ij],
+        ss = geometry.siteSum[:,ij],
+        is_on_site_pair = occursin(ij,geometry.OnSitePairs)
 
-        (; i, j) = geometry.PairTypes[ij]
-        ss = geometry.siteSum[:,ij]
 
+
+        if is_on_site_pair
+            0 # TODO
+        else
         T*sum( # for w in matsubaras
             sum( # for f1p,f2p,f3p,f4p
                 (@sitesum ss ik kj xk - Gamma(f1, f2, f1p, f4p, # flavours
@@ -153,6 +158,7 @@ DGamma_(f1::Flavour, f2::Flavour, f3::Flavour, f4::Flavour, # flavours
                     )
                  for f1p in flavours, f2p in flavours, f3p in flavours, f4p in flavours)
                for w in matsubaras)
+            end # if is_on_site_pair
     end # let s,t,u
 #! format: on
 
