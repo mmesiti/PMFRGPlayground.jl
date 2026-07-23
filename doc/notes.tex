@@ -10,6 +10,8 @@
   pdftitle={PMFRG For Dummies},
   pdfpagemode=FullScreen,
 }
+\newcommand{\ktilde}{\tilde{K}}
+\newcommand{\onehalf}{\frac{1}{2}}
 
 \urlstyle{same}
 
@@ -21,11 +23,15 @@
 
 \maketitle
 
-\section{What's this ``document''?}
+\section{Why this document}
 
 In this document all the necessary equations
 for the implementation of the PMFRG method
 are written in the most explicit way possible.
+
+Other related curiosities
+are also explicitly discussed,
+and some calculations worked out.
 
 These notes are work in progress,
 probably will never be really finished.
@@ -132,7 +138,8 @@ In the isotropic (Heisenberg) or diagonal (``XYZ'') case
 the inverse is trivial, but not in the most general anisotropic case,
 where some matrix inversion function needs to be used.
 
-The expression \ref{g-tflow-general} comes from \href{https://github.com/NoahHassan/pmfrg\_xyz/blob/1824a2bf7811b5276eee6d8d7f40087b5d8a4c15/src/PMFRG_general.jl\#L146-L159}{Noah's general PMFRG}
+The expression \ref{g-tflow-general} comes from
+\href{https://github.com/NoahHassan/pmfrg\_xyz/blob/1824a2bf7811b5276eee6d8d7f40087b5d8a4c15/src/PMFRG_general.jl\#L146-L159}{Noah's general PMFRG}
 code, but there should be a more official source.
 
 From the $T$-$\Lambda$ flow [\ref{PMFRGXYZTLambda}] (see line 1599) we get the same expression.
@@ -241,7 +248,8 @@ depending on whether the two sites $i$ and $j$ coincide
 or not.
 
 
-From Noah's Eqs.(3) and (4) and Siebe's notes, Eqs. (72) and (74)), we have two equations.
+From Noah's Eqs. (3) and (4) and Siebe's notes, Eqs. (72) and (74),
+we have two equations.
 When the $i$ and $j$ coincide:
 
 \begin{equation}
@@ -319,8 +327,100 @@ which in Siebe's notes is reported as
 $\eta^y_i \theta^z_i \eta^z_j \eta^x_j$
 instead (still with a plus sign).
 
-\section{Bibliography}
 
+\section{Angular momentum operator algebra}
+
+As known from elementary quantum mechanics:
+\begin{equation}
+  \label{spinlaw}
+  \left[S^\mu,S^\nu\right] = i \epsilon^{\mu\nu\rho} S^\rho .
+\end{equation}
+
+If we define
+\begin{equation}
+  \label{spinoperators}
+  S^\mu = \frac{1}{4} c_i \ktilde^\mu_{ij}c_j
+\end{equation}
+What does it mean for $\ktilde$? One might hope for an easy relationship like
+\begin{equation}
+  \label{expectedkrelations}
+  \left[\ktilde^\mu,\ktilde^\nu\right] = i \epsilon^{\mu\nu\rho} \ktilde^\rho
+\end{equation}
+
+And in his PhD thesis, Yannik claims (on Page 39) that
+
+\begin{quote}
+We can map it to a problem in linear
+algebra, by using that the second quantization of the commutator between two
+operators is the same as the commutator between the second quantized versions of
+these two operators.
+\end{quote}
+
+Is this true? It seems a little handwavy and hopeful to me.
+Expressing Eq.\ref{spinlaw} using Eq. \ref{spinoperators}
+one has the following calculation, with the assumption/notation:
+\begin{itemize}
+\item using $a$,$b$,$c$ and $d$ as Majorana variables meaning $c_a$, ... $c_d$
+\item repeated indices are summed over ($i$ counts as $c_i$, for $i$ in $a,\ldots d$)
+\item the square of a Majorana variable is $\onehalf$
+\end{itemize}
+\begin{equation}
+\begin{aligned}
+  \left[S^\mu,S^\nu\right] = abcd \left[ \ktilde^\mu_{ab}, \ktilde^\nu_{cd} \right] = \\
+abcd \left( \ktilde^\mu_{ab} \ktilde^\nu_{cd} -  \ktilde^\nu_{ab} \ktilde^\mu_{cd}\right) = \\
+(abcd - cdab) \ktilde^\mu_{ab} \ktilde^\nu_{cd}
+\end{aligned}
+\end{equation}
+We can prove Eq.\ref{expectedkrelations} if we move $a$ and $b$ to the left in $cdab$
+by swapping the operators step by step,
+obtaining $abcd$ and number of other terms popping up from
+$\left\{a,b \right\} = \onehalf \delta_{ab}$:
+\begin{equation}
+  \begin{aligned}
+    cd ab = - cadb + \onehalf \delta_{ad} cb = \\
+    + acdb + \onehalf \left(- \delta_{ac} db + \delta_{ad} cb \right)= \\
+    - acbd + \onehalf \left(+ \delta_{db} ac - \delta_{ac} db + \delta_{ad} cb \right)= \\
+    + abcd + \onehalf \left(- \delta_{cb} ad + \delta_{db} ac - \delta_{ac} db + \delta_{ad} cb \right)= \\
+  \end{aligned}
+\end{equation}
+which means
+\begin{equation}
+     abcd - cdab = \onehalf \left(+ \delta_{cb} ad - \delta_{db} ac + \delta_{ac} db - \delta_{ad} cb \right)
+\end{equation}
+So
+\begin{equation}
+  \begin{aligned}
+\left[S^\mu,S^\nu\right]  = + \onehalf \ktilde^\mu_{ai} \ktilde^\nu_{id} ad \\
+                          - \onehalf \ktilde^\mu_{ai}  \ktilde^\nu_{ci} ac \\
+                          + \onehalf \ktilde^\mu_{ib}  \ktilde^\nu_{id} db \\
+                          - \onehalf \ktilde^\mu_{ib}  \ktilde^\nu_{ci} cb
+  \end{aligned}
+\end{equation}
+Renaming all summed over indices in order to end up with a $ad$ binomial:
+\begin{equation}
+  \begin{aligned}
+\left[S^\mu,S^\nu\right]  = ad \left(+ \onehalf \ktilde^\mu_{ai} \ktilde^\nu_{id} \right. \\
+                          - \onehalf \ktilde^\mu_{ai}  \ktilde^\nu_{di} \\
+                          + \onehalf \ktilde^\mu_{id}  \ktilde^\nu_{ia} \\
+                          \left. - \onehalf \ktilde^\mu_{id}  \ktilde^\nu_{ai} \right)
+  \end{aligned}
+\end{equation}
+Using here \textbf{the antisymmetry of $\ktilde$} and rearranging the orders of the terms,
+we have
+\begin{equation}
+  \begin{aligned}
+\left[S^\mu,S^\nu\right]  = ad \left(+ \onehalf \ktilde^\mu_{ai} \ktilde^\nu_{id} \right. \\
+                          + \onehalf \ktilde^\mu_{ai}  \ktilde^\nu_{id} \\
+                          - \onehalf  \ktilde^\nu_{ai} \ktilde^\mu_{id} \\
+                          \left. - \onehalf \ktilde^\nu_{ai} \ktilde^\mu_{id}  \right) \\
+                          = ad \left[ \ktilde^\mu_{ai}\ktilde^\nu_{id} - \ktilde^\nu_{ai}\ktilde^\mu_{id}\right]
+  \end{aligned}
+\end{equation}
+from which Eq. \ref{expectedkrelations} trivially follows.
+
+
+
+\section{Bibliography}
 
 \begin{enumerate}
 \item General PFFRG review: \href{https://arxiv.org/pdf/2307.10359}{https://arxiv.org/pdf/2307.10359} \label{PFFRGReview}
